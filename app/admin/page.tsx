@@ -23,7 +23,7 @@ export default function AdminPage() {
 
   const fetchQuotes = async () => {
     setLoading(true);
-    let query = supabase.from<Quote>('Quotes').select('*').order('created_at', { ascending: false });
+    let query = supabase.from('Quotes').select('*').order('created_at', { ascending: false });
 
     if (filterStatus !== 'All') {
       query = query.eq('status', filterStatus);
