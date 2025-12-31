@@ -1,40 +1,27 @@
 // app/page.tsx
-// https://bmlw.vercel.app/
-import { supabase } from "@/lib/supabase";
 import Link from "next/link";
+import Image from "next/image";
 
-export default async function Home() {
-  const { data: tempData, error } = await supabase
-    .from("Temp") // must EXACTLY match table name (case-sensitive)
-    .select("*");
-
-  if (error) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-zinc-50 dark:bg-black">
-        <div className="rounded-xl border border-red-200 bg-white p-8 text-red-600 shadow-sm dark:border-red-900 dark:bg-zinc-900 dark:text-red-400">
-          <h1 className="mb-2 text-lg font-semibold">Something went wrong</h1>
-          <p className="text-sm">Error loading data: {error.message}</p>
-        </div>
-      </div>
-    );
-  }
-
+export default function Home() {
   return (
-    <div className="min-h-screen bg-zinc-50 font-sans text-zinc-900 dark:bg-black dark:text-zinc-100">
+    <div className="flex min-h-screen flex-col bg-gradient-to-b from-emerald-50/40 to-zinc-50 font-sans text-zinc-900 dark:from-zinc-950 dark:to-black dark:text-zinc-100">
       {/* Header */}
-      <header className="border-b border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-950">
-        <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
-          <h1 className="text-xl font-semibold tracking-tight">B&M Landscaping</h1>
+      <header className="border-b border-emerald-200/60 bg-white/90 backdrop-blur dark:border-zinc-800 dark:bg-zinc-950/90">
+        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-6">
+          <h1 className="text-2xl font-bold tracking-tight text-emerald-700 dark:text-emerald-400">
+            B&amp;M Landscaping
+          </h1>
+
           <div className="flex gap-4">
             <Link
               href="/quote"
-              className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="rounded-md bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-500 hover:shadow-md"
             >
               Request a Quote
             </Link>
             <Link
               href="/login"
-              className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="rounded-md border border-emerald-300/60 px-5 py-2.5 text-sm font-medium text-emerald-700 transition hover:bg-emerald-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-900"
             >
               Admin Dashboard
             </Link>
@@ -42,63 +29,151 @@ export default async function Home() {
         </div>
       </header>
 
+      {/* Hero Section */}
+      <section className="relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-emerald-100/40 via-transparent to-emerald-100/40 dark:from-emerald-900/10 dark:to-emerald-900/10" />
+        <div className="relative mx-auto max-w-6xl px-6 py-28 text-center">
+          <h2 className="mb-4 text-4xl font-bold tracking-tight">
+            Reliable. Professional.{" "}
+            <span className="text-emerald-600 dark:text-emerald-400">
+              Beautiful Results.
+            </span>
+          </h2>
+          <p className="mx-auto max-w-2xl text-lg text-zinc-600 dark:text-zinc-400">
+            Residential and commercial landscaping delivering clean,
+            high-quality work that transforms outdoor spaces.
+          </p>
+        </div>
+      </section>
 
-      {/* Main content */}
-      <main className="mx-auto max-w-5xl px-6 py-10">
-        <section className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-950">
-          <div className="mb-6 flex items-center justify-between">
-            <div>
-              <h2 className="text-lg font-semibold">Temp Table</h2>
-              <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                Live data pulled from Supabase
-              </p>
+      {/* Main Content */}
+      <main className="flex-1">
+        <section className="mx-auto max-w-6xl px-6 py-20">
+          {/* Gallery Header */}
+          <h3 className="mb-14 text-center text-4xl font-bold tracking-tight">
+            <span className="border-b-4 border-emerald-500 pb-2">
+              Gallery
+            </span>
+          </h3>
+
+          {/* Podium Image */}
+          <div className="mx-auto mb-16 max-w-sm">
+            <div className="group relative aspect-square overflow-hidden rounded-2xl border-2 border-emerald-500 bg-white shadow-lg dark:bg-zinc-950">
+              <Image
+                src="/car.jpeg"
+                alt="B&M Landscaping service vehicle"
+                fill
+                className="object-cover transition-transform duration-500 group-hover:scale-105"
+              />
             </div>
           </div>
 
-          {/* Table / Empty state */}
-          {tempData && tempData.length > 0 ? (
-            <div className="overflow-x-auto rounded-lg border border-zinc-200 dark:border-zinc-800">
-              <table className="w-full border-collapse text-sm">
-                <thead className="bg-zinc-100 dark:bg-zinc-900">
-                  <tr>
-                    {Object.keys(tempData[0]).map((col) => (
-                      <th
-                        key={col}
-                        className="whitespace-nowrap border-b border-zinc-200 px-4 py-3 text-left font-medium text-zinc-700 dark:border-zinc-800 dark:text-zinc-300"
-                      >
-                        {col}
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {tempData.map((row: any, rowIndex: number) => (
-                    <tr
-                      key={rowIndex}
-                      className="transition hover:bg-zinc-50 dark:hover:bg-zinc-900"
-                    >
-                      {Object.values(row).map((val, colIndex) => (
-                        <td
-                          key={colIndex}
-                          className="border-b border-zinc-200 px-4 py-3 text-zinc-700 dark:border-zinc-800 dark:text-zinc-300"
-                        >
-                          {String(val)}
-                        </td>
-                      ))}
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+          {/* Before & After Gallery */}
+          <div className="space-y-16">
+            {/* Row 1 */}
+            <div className="grid gap-10 md:grid-cols-2">
+              {/* Before */}
+              <div className="group relative aspect-square overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-sm transition hover:shadow-md dark:border-zinc-800 dark:bg-zinc-950">
+                <Image
+                  src="/before.jpg"
+                  alt="Before landscaping"
+                  fill
+                  className="object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+                <span className="absolute bottom-4 left-4 rounded-md bg-zinc-900/80 px-3 py-1 text-xs font-semibold text-white">
+                  Before
+                </span>
+              </div>
+
+              {/* After */}
+              <div className="group relative aspect-square overflow-hidden rounded-xl border border-emerald-300 bg-white shadow-sm transition hover:shadow-md dark:border-emerald-700 dark:bg-zinc-950">
+                <Image
+                  src="/after.jpg"
+                  alt="After landscaping"
+                  fill
+                  className="object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+                <span className="absolute bottom-4 left-4 rounded-md bg-emerald-600 px-3 py-1 text-xs font-semibold text-white">
+                  After
+                </span>
+              </div>
             </div>
-          ) : (
-            <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-zinc-300 py-16 text-center dark:border-zinc-700">
-              <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                No data found in the Temp table
-              </p>
+
+            {/* Divider */}
+            <div className="mx-auto h-px w-48 bg-gradient-to-r from-transparent via-emerald-400 to-transparent" />
+
+            {/* Row 2 */}
+            <div className="grid gap-10 md:grid-cols-2">
+              {/* Before */}
+              <div className="group relative aspect-square overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-sm transition hover:shadow-md dark:border-zinc-800 dark:bg-zinc-950">
+                <Image
+                  src="/pwbefore.jpeg"
+                  alt="Before pressure washing"
+                  fill
+                  className="object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+                <span className="absolute bottom-4 left-4 rounded-md bg-zinc-900/80 px-3 py-1 text-xs font-semibold text-white">
+                  Before
+                </span>
+              </div>
+
+              {/* After */}
+              <div className="group relative aspect-square overflow-hidden rounded-xl border border-emerald-300 bg-white shadow-sm transition hover:shadow-md dark:border-emerald-700 dark:bg-zinc-950">
+                <Image
+                  src="/pwafter.jpeg"
+                  alt="After pressure washing"
+                  fill
+                  className="object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+                <span className="absolute bottom-4 left-4 rounded-md bg-emerald-600 px-3 py-1 text-xs font-semibold text-white">
+                  After
+                </span>
+              </div>
             </div>
-          )}
+          </div>
         </section>
       </main>
+
+      {/* Footer */}
+      <footer className="border-t border-emerald-200/60 bg-white dark:border-zinc-800 dark:bg-zinc-950">
+        <div className="mx-auto max-w-6xl px-6 py-12">
+          <div className="grid gap-8 md:grid-cols-3">
+            <div>
+              <h4 className="text-sm font-semibold text-emerald-700 dark:text-emerald-400">
+                B&amp;M Landscaping
+              </h4>
+              <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
+                Premium landscaping services built on quality and trust.
+              </p>
+            </div>
+
+            <div>
+              <h4 className="text-sm font-semibold">Contact</h4>
+              <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
+                Phone: (555) 123-4567
+                <br />
+                Email: contact@bmlandscaping.com
+                <br />
+                Instagram: brownmcgurrin_ls
+              </p>
+            </div>
+
+            <div>
+              <h4 className="text-sm font-semibold">Get Started</h4>
+              <Link
+                href="/quote"
+                className="mt-2 inline-block text-sm font-semibold text-emerald-600 hover:underline"
+              >
+                Request a Quote →
+              </Link>
+            </div>
+          </div>
+
+          <p className="mt-12 text-center text-xs text-zinc-500">
+            © {new Date().getFullYear()} B&amp;M Landscaping. All rights reserved.
+          </p>
+        </div>
+      </footer>
     </div>
   );
 }

@@ -1,21 +1,39 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import Link from "next/link";
+import Link from 'next/link';
+
+const SESSION_KEY = 'admin_session';
+const SESSION_TIMEOUT = 30 * 60 * 1000; // 30 minutes
 
 export default function AdminLogin() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
-  // Use an environment variable for the password
   const ADMIN_PASSWORD = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || '1';
+
+  useEffect(() => {
+    // Check if session exists and is still valid
+    const session = localStorage.getItem(SESSION_KEY);
+    if (session) {
+      const sessionData = JSON.parse(session);
+      if (Date.now() < sessionData.expiresAt) {
+        router.push('/admin');
+      } else {
+        localStorage.removeItem(SESSION_KEY);
+      }
+    }
+  }, [router]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (password === ADMIN_PASSWORD) {
-      router.push('/admin'); // Make sure this path exists
+      // Set session
+      const expiresAt = Date.now() + SESSION_TIMEOUT;
+      localStorage.setItem(SESSION_KEY, JSON.stringify({ expiresAt }));
+      router.push('/admin');
     } else {
       setError('Incorrect password');
     }
@@ -24,7 +42,7 @@ export default function AdminLogin() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-zinc-50 dark:bg-black">
       <div className="w-full max-w-md">
-        {/* Back to Home Button */}
+        {/* Back to Home */}
         <div className="mb-6 text-left">
           <Link
             href="/"
