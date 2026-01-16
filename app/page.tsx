@@ -1,10 +1,28 @@
-// app/page.tsx
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 
 export default function Home() {
+  const [phoneMode, setPhoneMode] = useState(false);
+
+  const primaryButton =
+    "rounded-md bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-500 hover:shadow-md";
+
+  const outlineButton =
+    "rounded-md border border-emerald-300/60 px-5 py-2.5 text-sm font-semibold text-emerald-700 transition hover:bg-emerald-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-900";
+
   return (
-    <div className="flex min-h-screen flex-col bg-gradient-to-b from-emerald-50/40 to-zinc-50 font-sans text-zinc-900 dark:from-zinc-950 dark:to-black dark:text-zinc-100">
+    <div
+      className={`mx-auto min-h-screen flex-col bg-gradient-to-b from-emerald-50/40 to-zinc-50 font-sans text-zinc-900 dark:from-zinc-950 dark:to-black dark:text-zinc-100
+        ${
+          phoneMode
+            ? "max-w-[375px] border-x border-emerald-300 dark:border-zinc-800"
+            : ""
+        }
+      `}
+    >
       {/* Header */}
       <header className="border-b border-emerald-200/60 bg-white/90 backdrop-blur dark:border-zinc-800 dark:bg-zinc-950/90">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-6">
@@ -12,20 +30,36 @@ export default function Home() {
             B&amp;M Landscaping
           </h1>
 
-          <div className="flex gap-4">
-            <Link
-              href="/quote"
-              className="rounded-md bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-500 hover:shadow-md"
+          <div className="flex items-center gap-6">
+          {/* Mode Toggle Group */}
+          <div className="flex gap-2">
+            <button
+              onClick={() => setPhoneMode(false)}
+              className={phoneMode ? outlineButton : primaryButton}
             >
+              Computer
+            </button>
+
+            <button
+              onClick={() => setPhoneMode(true)}
+              className={phoneMode ? primaryButton : outlineButton}
+            >
+              Phone
+            </button>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="flex gap-3">
+            <Link href="/quote" className={primaryButton}>
               Request a Quote
             </Link>
-            <Link
-              href="/login"
-              className="rounded-md border border-emerald-300/60 px-5 py-2.5 text-sm font-medium text-emerald-700 transition hover:bg-emerald-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-900"
-            >
+
+            <Link href="/login" className={primaryButton}>
               Admin Dashboard
             </Link>
           </div>
+        </div>
+
         </div>
       </header>
 
@@ -33,23 +67,36 @@ export default function Home() {
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-emerald-100/40 via-transparent to-emerald-100/40 dark:from-emerald-900/10 dark:to-emerald-900/10" />
         <div className="relative mx-auto max-w-6xl px-6 py-28 text-center">
-          <h2 className="mb-4 text-4xl font-bold tracking-tight">
+          <h2
+            className={`mb-4 font-bold tracking-tight ${
+              phoneMode ? "text-3xl" : "text-4xl"
+            }`}
+          >
             Reliable. Professional.{" "}
             <span className="text-emerald-600 dark:text-emerald-400">
               Beautiful Results.
             </span>
           </h2>
+
           <p className="mx-auto max-w-2xl text-lg text-zinc-600 dark:text-zinc-400">
             Residential and commercial landscaping delivering clean,
             high-quality work that transforms outdoor spaces.
           </p>
+
+          {/* Phone-only CTA */}
+          {phoneMode && (
+            <div className="mx-auto mt-8 max-w-sm">
+              <Link href="/quote" className={primaryButton + " block text-center"}>
+                Get a Free Quote
+              </Link>
+            </div>
+          )}
         </div>
       </section>
 
       {/* Main Content */}
       <main className="flex-1">
         <section className="mx-auto max-w-6xl px-6 py-20">
-          {/* Gallery Header */}
           <h3 className="mb-14 text-center text-4xl font-bold tracking-tight">
             <span className="border-b-4 border-emerald-500 pb-2">
               Gallery
@@ -72,8 +119,7 @@ export default function Home() {
           <div className="space-y-16">
             {/* Row 1 */}
             <div className="grid gap-10 md:grid-cols-2">
-              {/* Before */}
-              <div className="group relative aspect-square overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-sm transition hover:shadow-md dark:border-zinc-800 dark:bg-zinc-950">
+              <div className="group relative aspect-square overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-sm dark:border-zinc-800 dark:bg-zinc-950">
                 <Image
                   src="/before.jpg"
                   alt="Before landscaping"
@@ -85,8 +131,7 @@ export default function Home() {
                 </span>
               </div>
 
-              {/* After */}
-              <div className="group relative aspect-square overflow-hidden rounded-xl border border-emerald-300 bg-white shadow-sm transition hover:shadow-md dark:border-emerald-700 dark:bg-zinc-950">
+              <div className="group relative aspect-square overflow-hidden rounded-xl border border-emerald-300 bg-white shadow-sm dark:border-emerald-700 dark:bg-zinc-950">
                 <Image
                   src="/after.jpg"
                   alt="After landscaping"
@@ -104,8 +149,7 @@ export default function Home() {
 
             {/* Row 2 */}
             <div className="grid gap-10 md:grid-cols-2">
-              {/* Before */}
-              <div className="group relative aspect-square overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-sm transition hover:shadow-md dark:border-zinc-800 dark:bg-zinc-950">
+              <div className="group relative aspect-square overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-sm dark:border-zinc-800 dark:bg-zinc-950">
                 <Image
                   src="/pwbefore.jpeg"
                   alt="Before pressure washing"
@@ -117,8 +161,7 @@ export default function Home() {
                 </span>
               </div>
 
-              {/* After */}
-              <div className="group relative aspect-square overflow-hidden rounded-xl border border-emerald-300 bg-white shadow-sm transition hover:shadow-md dark:border-emerald-700 dark:bg-zinc-950">
+              <div className="group relative aspect-square overflow-hidden rounded-xl border border-emerald-300 bg-white shadow-sm dark:border-emerald-700 dark:bg-zinc-950">
                 <Image
                   src="/pwafter.jpeg"
                   alt="After pressure washing"
@@ -137,38 +180,6 @@ export default function Home() {
       {/* Footer */}
       <footer className="border-t border-emerald-200/60 bg-white dark:border-zinc-800 dark:bg-zinc-950">
         <div className="mx-auto max-w-6xl px-6 py-12">
-          <div className="grid gap-8 md:grid-cols-3">
-            <div>
-              <h4 className="text-sm font-semibold text-emerald-700 dark:text-emerald-400">
-                B&amp;M Landscaping
-              </h4>
-              <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
-                Premium landscaping services built on quality and trust.
-              </p>
-            </div>
-
-            <div>
-              <h4 className="text-sm font-semibold">Contact</h4>
-              <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
-                Phone: (555) 123-4567
-                <br />
-                Email: contact@bmlandscaping.com
-                <br />
-                Instagram: brownmcgurrin_ls
-              </p>
-            </div>
-
-            <div>
-              <h4 className="text-sm font-semibold">Get Started</h4>
-              <Link
-                href="/quote"
-                className="mt-2 inline-block text-sm font-semibold text-emerald-600 hover:underline"
-              >
-                Request a Quote →
-              </Link>
-            </div>
-          </div>
-
           <p className="mt-12 text-center text-xs text-zinc-500">
             © {new Date().getFullYear()} B&amp;M Landscaping. All rights reserved.
           </p>
